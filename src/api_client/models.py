@@ -10,6 +10,7 @@ class TestCall(models.Model):
     end_date = models.DateTimeField(auto_now=True, null=True, blank=True)
     num_users = models.PositiveIntegerField(default=0)
     is_finished = models.BooleanField(default=False)
+    max_calls = models.PositiveBigIntegerField(default=1)
 
 class Result(models.Model):
     test_call = models.ForeignKey('TestCall', on_delete=models.CASCADE, related_name='results')
