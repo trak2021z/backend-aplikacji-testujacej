@@ -29,4 +29,14 @@ class TestSerializer(DynamicFieldsModelSerializer):
         model = Test
         fields = ('name', 'description')
 
+class TestCallSerializer(DynamicFieldsModelSerializer):
+    test = TestSerializer()
+    class Meta:
+        model = TestCall
+        fields = ('test', 'start_date', 'end_date', 'num_users', 'is_finished', 'max_calls')
 
+class TestResultSerializer(DynamicFieldsModelSerializer):
+    test_call = TestCallSerializer()
+    class Meta:
+        model = Result
+        fields = ['test_call']

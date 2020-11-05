@@ -30,3 +30,23 @@ class TestView(APIView):
     def get_many(self, request, format=None):
         tests = Test.objects.all()
         return self.serializer_class(tests, many=True)
+
+class TestResultView(APIView):
+    serializer_class = TestResultSerializer
+
+    def get(self, request, pk=None, format=None):
+        if pk:
+            try:
+                result = Result.objects.get(id=pk)
+                serializer = self.serializer_class(result)
+                data = serializer.data
+                data["results"] = json.loads(result.results)
+                return Response(data, status=status.HTTP_200_OK)
+            except Result.DoesNotExist:
+                return Response({'error': 'Result not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({'error': 'No pk specified'}, status=status.HTTP_404_NOT_FOUND)
+
+class TestResultByDateView(APIView):
+    def get(self, request, pk=None, format=None):
+        return Response({}, status=status.HTTP_200_OK)
