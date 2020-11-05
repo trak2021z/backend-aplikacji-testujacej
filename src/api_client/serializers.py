@@ -39,4 +39,4 @@ class TestResultSerializer(DynamicFieldsModelSerializer):
     test_call = TestCallSerializer()
     class Meta:
         model = Result
-        fields = ['test_call']
+        fields = ['test_call', 'results']
