@@ -3,7 +3,7 @@ FROM alpine:latest
 RUN apk update
 RUN apk add --no-cache \
     python3 \
-    py3-pip 
+    py3-pip \
     postgresql-dev \
     gcc \
     musl-dev \
