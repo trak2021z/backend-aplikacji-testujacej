@@ -21,5 +21,7 @@ import api_client.views as v
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^test/$', v.TestView.as_view(), name='tests_view'),
-    url(r'^test/(?P<pk>\d+)/$', v.TestView.as_view(), name='test_view'),
+    url(r'^test/(?P<pk>\d+)/$', v.TestView.as_view(), name='test_view'), 
+    url(r'^result/$', v.ResultView.as_view(), name='results_view'),
+    url(r'^result/(?P<pk>\d+)/$', v.ResultView.as_view(), name='result_view'),
 ]
