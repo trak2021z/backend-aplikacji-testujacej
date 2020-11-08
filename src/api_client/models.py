@@ -1,8 +1,10 @@
 from django.db import models
 
+
 class Test(models.Model):
     name = models.CharField(max_length=50, default="")
     description = models.CharField(max_length=150, default="")
+
 
 class TestCall(models.Model):
     test = models.ForeignKey('Test', on_delete=models.CASCADE, related_name='calls')
@@ -12,14 +14,17 @@ class TestCall(models.Model):
     is_finished = models.BooleanField(default=False)
     max_calls = models.PositiveBigIntegerField(default=1)
 
+
 class Result(models.Model):
     test_call = models.ForeignKey('TestCall', on_delete=models.CASCADE, related_name='results')
     results = models.TextField()
+
 
 class Endpoint(models.Model):
     url = models.CharField(max_length=50, default="")
     name = models.CharField(max_length=50, default="")
     request = models.TextField()
+
 
 class TestEndpoint(models.Model):
     test = models.ForeignKey('Test', on_delete=models.CASCADE, related_name='test_endpoints')
