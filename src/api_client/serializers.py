@@ -30,40 +30,46 @@ class TestSerializer(DynamicFieldsModelSerializer):
         fields = ('name', 'description')
 
 class EndpointSerializer(DynamicFieldsModelSerializer):
-    class Meta: 
+    class Meta:
         model = Endpoint
         fields = ('url', 'name', 'request', 'test_endpoints' )
-        
-        
-class TestDetailsSerializer(DynamicFieldsModelSerializer):   
+
+
+class TestDetailsSerializer(DynamicFieldsModelSerializer):
     endpoints = serializers.SerializerMethodField()
-    
+
     def get_endpoints(self, obj):
         endpoints = self.context.get('endpoints')
         return endpoints
-    
+
     class Meta:
         model = Test
         fields = ('name', 'description', 'endpoints')
-        
-class TestCallSerializer(DynamicFieldsModelSerializer):  
+
+class TestCallSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = TestCall
         fields = ('id', 'start_date', 'end_date', 'num_users', 'is_finished')
-        
+
 class ResultSerializer(DynamicFieldsModelSerializer):
     test_call = TestCallSerializer()
     class Meta:
         model = Result
-        fields = ('test_call', 'results')        
-        
-class TestResultsSerializer(DynamicFieldsModelSerializer):   
+        fields = ('test_call', 'results')
+
+class TestResultsSerializer(DynamicFieldsModelSerializer):
     testCalls = serializers.SerializerMethodField()
-    
+
     def get_testCalls(self, obj):
         testCalls = self.context.get('testCalls')
         return testCalls
-    
+
     class Meta:
         model = Test
         fields = ('name', 'description', 'testCalls')
+
+class TestResultSerializer(DynamicFieldsModelSerializer):
+    test_call = TestCallSerializer()
+    class Meta:
+        model = Result
+        fields = ['test_call', 'results']
