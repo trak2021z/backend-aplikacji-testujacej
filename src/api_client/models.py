@@ -4,6 +4,7 @@ from django.db import models
 class Test(models.Model):
     name = models.CharField(max_length=50, default="")
     description = models.CharField(max_length=150, default="")
+    class_name = models.CharField(max_length=100, default="")
 
 
 class TestCall(models.Model):
