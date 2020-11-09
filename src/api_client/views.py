@@ -78,24 +78,42 @@ class ResultView(APIView):
 
         return result
 
-class TestResultView(APIView):
-    serializer_class = TestResultSerializer
+class TestCallView(APIView):
+    serializer_class = TestCallSerializer
 
     def get(self, request, pk=None, format=None):
         if pk:
             try:
-                result = Result.objects.get(id=pk)
-                serializer = self.serializer_class(result)
-                data = serializer.data
-                data["results"] = json.loads(data["results"])
-                return Response(data, status=status.HTTP_200_OK)
+                test_call = TestCall.objects.get(id=pk)
+                serializer = self.serializer_class(test_call)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             except Result.DoesNotExist:
                 return Response({'error': 'Result not found'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({'error': 'No pk specified'}, status=status.HTTP_404_NOT_FOUND)
 
-class TestResultByDateView(APIView):
-    serializer_class = TestResultSerializer
+class TestCallDetailsView(APIView):
+    serializer_class = TestCallDetailsSerializer
+
+    def get(self, request, pk=None, format=None):
+        if pk:
+            try:
+                test_call = TestCall.objects.get(id=pk)
+                serializer = self.serializer_class(test_call)
+                data = serializer.data
+                results = Result.objects.filter(test_call=test_call)
+                json_results = []
+                for result in results:
+                    json_results.append(json.loads(result.results))
+                data["results"] = json_results
+                return Response(data, status=status.HTTP_200_OK)
+            except Result.DoesNotExist:
+                return Response({'error': 'Test Call not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({'error': 'No pk specified'}, status=status.HTTP_404_NOT_FOUND)
+
+class TestCallByDateView(APIView):
+    serializer_class = TestCallSerializer
     def get(self, request, test_date=None, format=None):
         if test_date:
             try:
@@ -108,9 +126,5 @@ class TestResultByDateView(APIView):
         return Response(data, status=status.HTTP_200_OK)
     def get_many(self, request,  date, format=None):
         test_calls = TestCall.objects.filter(start_date__date=date.date())
-        tests = Result.objects.filter(test_call__in=test_calls)
-        serializer = self.serializer_class(tests, many=True)
-        data = serializer.data
-        for result in data:
-            result['results'] = json.loads(result['results'])
-        return data
+        serializer = self.serializer_class(test_calls, many=True)
+        return serializer.data
