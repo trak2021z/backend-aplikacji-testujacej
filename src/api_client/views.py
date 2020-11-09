@@ -105,8 +105,8 @@ class TestCallView(APIView):
                     )
                     save_serializer = TestCallSerializer(test_call)
                     return Response(save_serializer.data, status=status.HTTP_201_CREATED)
-                except Test.DoesNotExist as e:
-                    return JsonResponse({'error': str(e)}, safe=False, status=status.HTTP_404_NOT_FOUND)
+                except Exception as e:
+                    return JsonResponse({'error': str(e)}, safe=False, status=status.HTTP_400_BAD_REQUEST)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class TestCallDetailsView(APIView):
     serializer_class = TestCallDetailsSerializer
