@@ -17,7 +17,7 @@ from .models import *
 class TestView(APIView):
     testSerializer = TestSerializer
     testDetailsSerializer = TestDetailsSerializer
-    
+
     @swagger_auto_schema(responses={200: testSerializer()})
     def get(self, request, pk=None, format=None):
         if pk:
@@ -25,7 +25,7 @@ class TestView(APIView):
         else:
             serializer = self.get_many(request, format)
         return Response(serializer.data, status=status.HTTP_200_OK)
-        
+
     def get_single(self, request, pk, format=None):
         tests = Test.objects.get(id=pk)
         ids = list(TestEndpoint.objects.values().filter(test_id=pk).values_list('endpoint_id', flat=True))
@@ -36,27 +36,28 @@ class TestView(APIView):
         tests = Test.objects.all()
         return self.testSerializer(tests, many=True)
 
+
 class ResultView(APIView):
     testResultsSerializer = TestResultsSerializer
+
     @swagger_auto_schema(responses={200: testResultsSerializer()})
-    
     def get(self, request, pk=None, format=None):
         if pk:
             serializer = self.get_single(request, pk, format).data
         else:
             serializer = self.get_many(request, format)
         return Response(serializer, status=status.HTTP_200_OK)
-        
+
     def get_single(self, request, pk, format=None):
-        tests = Test.objects.get(id=pk)      
+        tests = Test.objects.get(id=pk)
         testCall_ids = list(TestCall.objects.values().filter(test_id=pk).values_list('id', flat=True))
         testCalls = list(TestCall.objects
-        .values('id', 'start_date', 'end_date', 'num_users', 'is_finished', 'is_finished')
-        .filter(id__in = testCall_ids).order_by('-start_date'))
+                         .values('id', 'start_date', 'end_date', 'num_users', 'is_finished', 'is_finished')
+                         .filter(id__in=testCall_ids).order_by('-start_date'))
 
-        for testCall in testCalls:  
+        for testCall in testCalls:
             testCall['results'] = list(Result.objects.values('results')
-                                       .filter(test_call_id = testCall['id'])
+                                       .filter(test_call_id=testCall['id'])
                                        .values_list('results', flat=True))
         return self.testResultsSerializer(tests, context={'testCalls': testCalls})
 
@@ -66,13 +67,12 @@ class ResultView(APIView):
         for test in tests:
             testCall_ids = list(TestCall.objects.values().filter(test_id=test['id']).values_list('id', flat=True))
             testCalls = list(TestCall.objects
-            .values('id', 'start_date', 'end_date', 'num_users', 'is_finished', 'is_finished')
-            .filter(id__in = testCall_ids).order_by('-start_date'))
-            for testCall in testCalls:  
+                             .values('id', 'start_date', 'end_date', 'num_users', 'is_finished', 'is_finished')
+                             .filter(id__in=testCall_ids).order_by('-start_date'))
+            for testCall in testCalls:
                 testCall['results'] = list(Result.objects.values('results')
-                                           .filter(test_call_id = testCall['id'])
+                                           .filter(test_call_id=testCall['id'])
                                            .values_list('results', flat=True))
-            result.append(self.testResultsSerializer(test, context={'testCalls': testCalls}).data)                          
-            
+            result.append(self.testResultsSerializer(test, context={'testCalls': testCalls}).data)
 
         return result
