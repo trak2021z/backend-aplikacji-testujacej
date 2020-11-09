@@ -77,7 +77,7 @@ class ResultView(APIView):
                                            .values_list('results', flat=True))
             result.append(self.testResultsSerializer(test, context={'testCalls': testCalls}).data)
 
-            
+
 class TestCallView(APIView):
     serializer_class = TestCallSerializer
 
@@ -93,21 +93,24 @@ class TestCallView(APIView):
             test_calls = TestCall.objects.all()
             serializer = self.serializer_class(test_calls, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
+
     def post(self, request):
-            serializer = TestCallInputSerializer(data=request.data, fields=('test', 'num_users', 'max_calls'))
-            if serializer.is_valid():
-                test_id = serializer.validated_data['test']
-                try:
-                    test_call = TestCall.objects.create(
-                        test=test_id,
-                        num_users=serializer.validated_data["num_users"],
-                        max_calls=serializer.validated_data["max_calls"]
-                    )
-                    save_serializer = TestCallSerializer(test_call)
-                    return Response(save_serializer.data, status=status.HTTP_201_CREATED)
-                except Exception as e:
-                    return JsonResponse({'error': str(e)}, safe=False, status=status.HTTP_400_BAD_REQUEST)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = TestCallInputSerializer(data=request.data, fields=('test', 'num_users', 'max_calls'))
+        if serializer.is_valid():
+            test_id = serializer.validated_data['test']
+            try:
+                test_call = TestCall.objects.create(
+                    test=test_id,
+                    num_users=serializer.validated_data["num_users"],
+                    max_calls=serializer.validated_data["max_calls"]
+                )
+                save_serializer = TestCallSerializer(test_call)
+                return Response(save_serializer.data, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, safe=False, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class TestCallDetailsView(APIView):
     serializer_class = TestCallDetailsSerializer
 
@@ -128,8 +131,10 @@ class TestCallDetailsView(APIView):
         else:
             return Response({'error': 'No pk specified'}, status=status.HTTP_404_NOT_FOUND)
 
+
 class TestCallByDateView(APIView):
     serializer_class = TestCallSerializer
+
     def get(self, request, test_date=None, format=None):
         if test_date:
             try:
@@ -140,7 +145,8 @@ class TestCallByDateView(APIView):
             date = datetime.now()
         data = self.get_many(request, date, format)
         return Response(data, status=status.HTTP_200_OK)
-    def get_many(self, request,  date, format=None):
+
+    def get_many(self, request, date, format=None):
         test_calls = TestCall.objects.filter(start_date__date=date.date())
         serializer = self.serializer_class(test_calls, many=True)
         return serializer.data
