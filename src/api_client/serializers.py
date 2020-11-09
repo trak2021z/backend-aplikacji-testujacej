@@ -51,6 +51,11 @@ class TestCallSerializer(DynamicFieldsModelSerializer):
         model = TestCall
         fields = ('id', 'start_date', 'end_date', 'num_users', 'is_finished')
 
+class TestCallInputSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = TestCall
+        fields = ['test', 'num_users', 'max_calls']
+
 class ResultSerializer(DynamicFieldsModelSerializer):
     test_call = TestCallSerializer()
     class Meta:
