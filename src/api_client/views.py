@@ -23,20 +23,26 @@ class TestView(APIView):
     @swagger_auto_schema(responses={200: testSerializer()})
     def get(self, request, pk=None, format=None):
         if pk:
-            serializer = self.get_single(request, pk, format)
+            serializer = self.get_single(request, pk, format).data
         else:
             serializer = self.get_many(request, format)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer, status=status.HTTP_200_OK)
 
     def get_single(self, request, pk, format=None):
         tests = Test.objects.get(id=pk)
         ids = list(TestEndpoint.objects.values().filter(test_id=pk).values_list('endpoint_id', flat=True))
         endpoints = list(Endpoint.objects.values().filter(id__in=ids))
+        for endpoint in endpoints:
+            endpoint['order'] = TestEndpoint.objects.filter(test_id=pk).filter(endpoint_id=endpoint['id']).values('order').get()['order']
         return self.testDetailsSerializer(tests, context={'endpoints': endpoints})
 
     def get_many(self, request, format=None):
-        tests = Test.objects.all()
-        return self.testSerializer(tests, many=True)
+        result = []
+        tests = list(Test.objects.values())
+        for test in tests:
+            endpoints_count = TestEndpoint.objects.filter(test_id=test['id']).count()
+            result.append(self.testSerializer(test, context={'endpoints_count': endpoints_count}).data)   
+        return result
 
 
 class ResultView(APIView):
