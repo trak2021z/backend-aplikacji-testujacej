@@ -58,9 +58,13 @@ class ResultView(APIView):
                          .filter(id__in=testCall_ids).order_by('-start_date'))
 
         for testCall in testCalls:
-            testCall['results'] = list(Result.objects.values('results')
+            results = list(Result.objects.values('results')
                                        .filter(test_call_id=testCall['id'])
                                        .values_list('results', flat=True))
+            json_results = []
+            for result_str in results:
+                json_results.append(json.loads(result_str))
+            testCall['results'] = json_results
         return self.testResultsSerializer(tests, context={'testCalls': testCalls})
 
     def get_many(self, request, format=None):
@@ -72,11 +76,15 @@ class ResultView(APIView):
                              .values('id', 'start_date', 'end_date', 'num_users', 'is_finished', 'is_finished')
                              .filter(id__in=testCall_ids).order_by('-start_date'))
             for testCall in testCalls:
-                testCall['results'] = list(Result.objects.values('results')
-                                           .filter(test_call_id=testCall['id'])
-                                           .values_list('results', flat=True))
+                results = list(Result.objects.values('results')
+                               .filter(test_call_id=testCall['id'])
+                               .values_list('results', flat=True))
+                json_results = []
+                for result_str in results:
+                    json_results.append(json.loads(result_str))
+                testCall['results'] = json_results
             result.append(self.testResultsSerializer(test, context={'testCalls': testCalls}).data)
-
+        return result
             
 class TestCallView(APIView):
     serializer_class = TestCallSerializer
