@@ -33,7 +33,7 @@ class TestView(APIView):
         ids = list(TestEndpoint.objects.values().filter(test_id=pk).values_list('endpoint_id', flat=True))
         endpoints = list(Endpoint.objects.values().filter(id__in=ids))
         for endpoint in endpoints:
-            endpoint['order'] = TestEndpoint.objects.filter(test_id=pk).filter(endpoint_id=endpoint['id']).values('order').get()['order']
+            endpoint['order'] = TestEndpoint.objects.filter(test_id=pk).filter(endpoint_id=endpoint['id']).values('order').values_list('order', flat=True)
         return self.testDetailsSerializer(tests, context={'endpoints': endpoints})
 
     def get_many(self, request, format=None):
