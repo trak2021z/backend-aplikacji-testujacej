@@ -25,9 +25,17 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 
 
 class TestSerializer(DynamicFieldsModelSerializer):
+    endpoints_count = serializers.SerializerMethodField()
+    
+    def get_endpoints_count(self, obj):
+        endpoints_count = self.context.get('endpoints_count')
+        return endpoints_count
+        
     class Meta:
         model = Test
-        fields = ('name', 'description')
+        fields = ('id', 'name', 'description', 'endpoints_count')
+        
+        
 
 class EndpointSerializer(DynamicFieldsModelSerializer):
     class Meta:
