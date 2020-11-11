@@ -170,7 +170,7 @@ class TestCallByDateView(APIView):
             date = datetime.now()
         data = self.get_many(request, date, format)
         return Response(data, status=status.HTTP_200_OK)
-    
+
     def get_many(self, request, date, format=None):
         test_calls = TestCall.objects.filter(start_date__date=date.date())
         serializer = self.serializer_class(test_calls, many=True)
