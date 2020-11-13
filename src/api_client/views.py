@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status, serializers, viewsets
 from rest_framework.views import APIView
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.db.models import Count
 import json
 from rest_framework.renderers import JSONRenderer
@@ -154,7 +154,30 @@ class TestCallDetailsView(APIView):
                     json_results.append(json.loads(result.results))
                 data["results"] = json_results
                 return Response(data, status=status.HTTP_200_OK)
-            except Result.DoesNotExist:
+            except TestCall.DoesNotExist:
+                return Response({'error': 'Test Call not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({'error': 'No pk specified'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class TestCallJsonView(APIView):
+    serializer_class = TestCallDetailsSerializer
+
+    @swagger_auto_schema(responses={200: serializer_class()},
+                         manual_parameters=[Parameter(name="FRONT", in_='header', type='str')])
+    def get(self, request, pk=None, format=None):
+        if pk:
+            try:
+                test_call = TestCall.objects.get(id=pk)
+                results = Result.objects.filter(test_call=test_call)
+                json_results = []
+                for result in results:
+                    json_results.append(json.loads(result.results))
+                json_name = str(test_call.id) + test_call.start_date.strftime("D%d_%m_%YT%H_%M_%S") + ".json"
+                response = HttpResponse(json_results, content_type='application/json')
+                response['Content-Disposition'] = 'attachment; filename=%s' % json_name
+                return response
+            except TestCall.DoesNotExist:
                 return Response({'error': 'Test Call not found'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({'error': 'No pk specified'}, status=status.HTTP_404_NOT_FOUND)
