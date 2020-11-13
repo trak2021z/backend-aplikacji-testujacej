@@ -15,6 +15,9 @@ from rest_framework.renderers import JSONRenderer
 from datetime import datetime
 from .serializers import *
 from .models import *
+from .tasks import run_test
+
+import traceback
 
 
 class TestView(APIView):
@@ -126,8 +129,10 @@ class TestCallView(APIView):
                     max_calls=serializer.validated_data["max_calls"]
                 )
                 save_serializer = TestCallSerializer(test_call)
+                run_test.delay(save_serializer.data)
                 return Response(save_serializer.data, status=status.HTTP_201_CREATED)
             except Exception as e:
+                print(traceback.format_exc())
                 return JsonResponse({'error': str(e)}, safe=False, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
