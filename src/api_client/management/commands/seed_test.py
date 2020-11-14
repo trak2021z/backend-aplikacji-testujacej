@@ -27,10 +27,12 @@ class Command(BaseCommand):
                                 request="")
         history = Endpoint.objects.create(url='user/history/', name="Lista zrealizowanych transakcji danego użytkownika",
                                 request="")
-        buy_offer = Endpoint.objects.create(url='buyoffer/', name="Utworzenie oferty kupna",
+        buy_offer = Endpoint.objects.create(url='buyoffer/', name="Oferty kupna",
                                 request="")
-        sell_offer = Endpoint.objects.create(url='selloffer/', name="Utworzenie oferty sprzedaży",
+        sell_offer = Endpoint.objects.create(url='selloffer/', name="Oferty sprzedaży",
                                 request="")
+        price_history = Endpoint.objects.create(url='price_history/', name="Historia cen akcji",
+                                request="")                        
 
         endpoints = Endpoint.objects.all()
         print(endpoints)
@@ -58,8 +60,9 @@ class Command(BaseCommand):
         TestEndpoint.objects.create(test=test_3, endpoint=stocks, order=2)
         TestEndpoint.objects.create(test=test_3, endpoint=wallet, order=3)
         TestEndpoint.objects.create(test=test_3, endpoint=stock_buy, order=4)
-        TestEndpoint.objects.create(test=test_3, endpoint=offers, order=5)
-        TestEndpoint.objects.create(test=test_3, endpoint=history, order=6)
+        TestEndpoint.objects.create(test=test_3, endpoint=user_stocks, order=5)
+        TestEndpoint.objects.create(test=test_3, endpoint=sell_offer, order=6)
+        TestEndpoint.objects.create(test=test_3, endpoint=offers, order=7)
 
         test_4 = Test.objects.create(name= "Kupuj i sprzedawaj", 
                                     description="Kupno do oporu, wystawiaj oferty do połowy posiadanych akcji", class_name="Test4")
@@ -68,8 +71,10 @@ class Command(BaseCommand):
         TestEndpoint.objects.create(test=test_4, endpoint=stocks, order=2)
         TestEndpoint.objects.create(test=test_4, endpoint=wallet, order=3)
         TestEndpoint.objects.create(test=test_4, endpoint=stock_buy, order=4)
-        TestEndpoint.objects.create(test=test_4, endpoint=sell_offer, order=5)
-        TestEndpoint.objects.create(test=test_4, endpoint=offers, order=6)
+        TestEndpoint.objects.create(test=test_4, endpoint=user_stocks, order=5)
+        TestEndpoint.objects.create(test=test_4, endpoint=sell_offer, order=6)
+        TestEndpoint.objects.create(test=test_4, endpoint=offers, order=7)
+        TestEndpoint.objects.create(test=test_4, endpoint=sell_offer, order=8)
 
         test_5 = Test.objects.create(name= "Kupuj do oporu", 
                                     description="Kupno danej akcji do końca akcji lub funduszy", class_name="Test5")
@@ -86,7 +91,8 @@ class Command(BaseCommand):
         TestEndpoint.objects.create(test=test_6, endpoint=stocks, order=2)
         TestEndpoint.objects.create(test=test_6, endpoint=user_stocks, order=3)
         TestEndpoint.objects.create(test=test_6, endpoint=company, order=4)
-        TestEndpoint.objects.create(test=test_6, endpoint=offers, order=5)
-        TestEndpoint.objects.create(test=test_6, endpoint=history, order=6)
+        TestEndpoint.objects.create(test=test_6, endpoint=company_detail, order=5)
+        TestEndpoint.objects.create(test=test_6, endpoint=offers, order=6)
+        TestEndpoint.objects.create(test=test_6, endpoint=price_history, order=7)
 
         print("DONE")
