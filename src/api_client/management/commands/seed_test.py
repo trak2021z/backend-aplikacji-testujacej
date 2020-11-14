@@ -16,7 +16,7 @@ class Command(BaseCommand):
         stock_detail = Endpoint.objects.create(url='stock/<stock_id>', name="Szczegóły pojedynczego zasobu", request="")
         stock_buy = Endpoint.objects.create(url='stock/<stock_id>/buy/', name="Kupno pojedynczego zasobu",
                                 request='{"quantity": 0}')
-        stock_create = Endpoint.objects.create(url='stock/<stock_id>/sell/', name="Utworzenie pojedynczego zasobu",
+        stock_sell = Endpoint.objects.create(url='stock/<stock_id>/sell/', name="Sprzedaż pojedynczego zasobu",
                                 request='{"quantity": 0}')
         transactions_stock = Endpoint.objects.create(url='transaction/<stock_id>',
                                 name="Lista wszystkich zleceń kupna i sprzedaży dla danego zasobu", request="")
@@ -63,6 +63,7 @@ class Command(BaseCommand):
         TestEndpoint.objects.create(test=test_3, endpoint=user_stocks, order=5)
         TestEndpoint.objects.create(test=test_3, endpoint=sell_offer, order=6)
         TestEndpoint.objects.create(test=test_3, endpoint=offers, order=7)
+        TestEndpoint.objects.create(test=test_3, endpoint=history, order=8)
 
         test_4 = Test.objects.create(name= "Kupuj i sprzedawaj", 
                                     description="Kupno do oporu, wystawiaj oferty do połowy posiadanych akcji", class_name="Test4")
@@ -75,6 +76,7 @@ class Command(BaseCommand):
         TestEndpoint.objects.create(test=test_4, endpoint=sell_offer, order=6)
         TestEndpoint.objects.create(test=test_4, endpoint=offers, order=7)
         TestEndpoint.objects.create(test=test_4, endpoint=sell_offer, order=8)
+        TestEndpoint.objects.create(test=test_4, endpoint=stock_sell, order=9)
 
         test_5 = Test.objects.create(name= "Kupuj do oporu", 
                                     description="Kupno danej akcji do końca akcji lub funduszy", class_name="Test5")
