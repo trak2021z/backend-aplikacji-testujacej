@@ -58,7 +58,7 @@ class Command(BaseCommand):
         TestEndpoint.objects.create(test=test_3, endpoint=stocks, order=2)
         TestEndpoint.objects.create(test=test_3, endpoint=wallet, order=3)
         TestEndpoint.objects.create(test=test_3, endpoint=stock_buy, order=4)
-        TestEndpoint.objects.create(test=test_3, endpoint=offers, order=5
+        TestEndpoint.objects.create(test=test_3, endpoint=offers, order=5)
         TestEndpoint.objects.create(test=test_3, endpoint=history, order=6)
 
         test_4 = Test.objects.create(name= "Kupuj i sprzedawaj", 
