@@ -38,7 +38,7 @@ class Command(BaseCommand):
         print(endpoints)
 
         test_1 = Test.objects.create(name= "Kupuj kolejne, dopóki są fundusze", 
-                                    description="Kupno kolejnych akcji z listy do końca funduszy lub akcji", class_name="Test1")
+                                    description="Kupno kolejnych akcji z listy do końca funduszy lub akcji", class_name="BuyUntilFounds")
         testEnd1_1 = TestEndpoint.objects.create(test=test_1, endpoint=registration, order=0)
         testEnd1_2 = TestEndpoint.objects.create(test=test_1, endpoint=log_in, order=testEnd1_1.endpoint.pk)
         testEnd1_3 = TestEndpoint.objects.create(test=test_1, endpoint=stocks, order=testEnd1_2.endpoint.pk)
@@ -46,7 +46,7 @@ class Command(BaseCommand):
         TestEndpoint.objects.create(test=test_1, endpoint=stock_buy, order=testEnd1_4.endpoint.pk)
 
         test_2 = Test.objects.create(name= "Oferty kupna do oporu", 
-                                    description="Wystawiaj oferty kupna do końca akcji", class_name="Test2")
+                                    description="Wystawiaj oferty kupna do końca akcji", class_name="BuyOffersAll")
         testEnd2_1 = TestEndpoint.objects.create(test=test_2, endpoint=registration, order=0)
         testEnd2_2 = TestEndpoint.objects.create(test=test_2, endpoint=log_in, order=testEnd2_1.endpoint.pk)
         testEnd2_3 = TestEndpoint.objects.create(test=test_2, endpoint=stocks, order=testEnd2_2.endpoint.pk)
