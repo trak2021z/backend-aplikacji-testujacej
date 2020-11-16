@@ -46,7 +46,7 @@ class Command(BaseCommand):
         TestEndpoint.objects.create(test=test_1, endpoint=stock_buy, order=testEnd1_4.endpoint.pk)
 
         test_2 = Test.objects.create(name= "Oferty kupna do oporu", 
-                                    description="Wystawiaj oferty kupna do końca akcji", class_name="Test2")
+                                    description="Wystawiaj oferty kupna do końca akcji", class_name="BuyOffersAll")
         testEnd2_1 = TestEndpoint.objects.create(test=test_2, endpoint=registration, order=0)
         testEnd2_2 = TestEndpoint.objects.create(test=test_2, endpoint=log_in, order=testEnd2_1.endpoint.pk)
         testEnd2_3 = TestEndpoint.objects.create(test=test_2, endpoint=stocks, order=testEnd2_2.endpoint.pk)
