@@ -106,8 +106,8 @@ def process_function(cls: typing.Type[abstract.LoadTesterBase], max_requests: in
     test_call = TestCall.objects.get(pk=test_call_dict['id'])
     counted_requests = CountedRequestsWrapper(counter, lock, max_requests, test_call)
     obj = cls[1](counted_requests)
-    obj.set_up()
     try:
+        obj.set_up()
         obj.test_func()
     except CounterExceeded:
         pass
