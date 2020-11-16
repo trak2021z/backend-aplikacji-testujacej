@@ -144,15 +144,15 @@ class DisplayAll(LoadTesterBase):
                                            headers={"Authorization": "Bearer %s" % token})
         companies = result.json()    
         
-            for company in companies:
-                result = self.counted_requests.get("%s/company/%s" % (os.getenv("BACKEND_URL"), company['id'])  ,
-                                           headers={"Authorization": "Bearer %s" % token})
+        for company in companies:
+                result = self.counted_requests.get("%s/company/%s" % (os.getenv("BACKEND_URL"), company['id']),
+                                           headers={"Authorization": "Bearer %s" % token})    
                                            
         result = self.counted_requests.get("%s/user/offers/" % os.getenv("BACKEND_URL"),
                                            headers={"Authorization": "Bearer %s" % token})                                   
         result = self.counted_requests.get("%s/price_history/" % os.getenv("BACKEND_URL"),
                                            headers={"Authorization": "Bearer %s" % token,
-                                                    "OBCIAZNIK": "1")    
+                                                    "OBCIAZNIK": "1"})    
     def tear_down(self):
         if not hasattr(self, 'user'):
             return
