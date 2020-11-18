@@ -17,5 +17,4 @@ ADD ./ /usr/src/app
 WORKDIR /usr/src/app/src
 
 RUN pip3 install -r requirements.txt
-RUN python3 manage.py migrate --noinput
-RUN python3 manage.py createsuperuser
+RUN curl -OL https://raw.githubusercontent.com/mrako/wait-for/master/wait-for && chmod +x wait-for && chmod +x db-ops.sh

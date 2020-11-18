@@ -86,10 +86,21 @@ WSGI_APPLICATION = 'testing_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres-test',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'db-test',
+        'PORT': 5433,
     }
 }
+
+if not os.getenv("USE_POSTGRES"):
+    if os.getenv("USE_POSTGRES") != "TRUE":
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
 
 
 # Password validation
