@@ -6,7 +6,7 @@ import random
 class Command(BaseCommand):
     def handle(self, **options):
         TestEndpoint.objects.all().delete()
-        Endpoint.objects.all.delete()
+        Endpoint.objects.all().delete()
         Test.objects.all().delete()
         log_in = Endpoint.objects.create(url="rest-auth/login/", name="Logowanie", request="")
         log_out = Endpoint.objects.create(url="rest-auth/logout/", name="Wylogowanie", request="")
