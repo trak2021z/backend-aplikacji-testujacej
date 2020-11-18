@@ -2,9 +2,9 @@ from django.db import models
 
 
 class Test(models.Model):
-    name = models.CharField(max_length=50, default="")
+    name = models.CharField(max_length=150, default="")
     description = models.CharField(max_length=150, default="")
-    class_name = models.CharField(max_length=100, default="")
+    class_name = models.CharField(max_length=150, default="")
 
 
 class TestCall(models.Model):
@@ -22,8 +22,8 @@ class Result(models.Model):
 
 
 class Endpoint(models.Model):
-    url = models.CharField(max_length=50, default="")
-    name = models.CharField(max_length=50, default="")
+    url = models.CharField(max_length=150, default="")
+    name = models.CharField(max_length=150, default="")
     request = models.TextField()
 
 
