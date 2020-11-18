@@ -1,3 +1,3 @@
-python manage.py migrate --noinput
-python manage.py createsuperuser
-python manage.py seed_test
+python3 manage.py migrate --noinput
+python3 manage.py createsuperuser
+python3 manage.py seed_test
