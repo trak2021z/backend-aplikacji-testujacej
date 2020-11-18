@@ -1,6 +1,8 @@
 import json
 import os
-from multiprocessing import Process, Value, Lock
+
+import billiard as multiprocessing
+
 from .LoadTester import load_tests, abstract
 from .LoadTester.proc_func import process_function
 from .celery import app
@@ -31,11 +33,11 @@ def run_test(test_call_str: str):
         raise TypeError('Cannot find described class: %s' % test_call.test.class_name)
 
     needed_class = needed_class[0]
-    counter = Value('i', 0)
-    lock = Lock()
+    counter = multiprocessing.Value('i', 0)
+    lock = multiprocessing.Lock()
     processes = []
     for i in range(test_call.num_users):
-        proc = Process(target=process_function, args=(needed_class, test_call.max_calls, counter, lock, test_call_dict))
+        proc = multiprocessing.Process(target=process_function, args=(needed_class, test_call.max_calls, counter, lock, test_call_dict))
         proc.start()
         processes.append(proc)
 
