@@ -147,3 +147,9 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'FRONT',
 ]
+
+
+if os.getenv('CELERY_BROKER_URL'):
+    CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+else:
+    CELERY_BROKER_URL = 'amqp://localhost:5672'
