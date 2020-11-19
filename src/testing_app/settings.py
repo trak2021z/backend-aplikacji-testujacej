@@ -166,7 +166,7 @@ if os.getenv('CELERY_BROKER_URL'):
 else:
     CELERY_BROKER_URL = 'amqp://localhost:5672'
     
-LOGGING = {
+"""LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'filters': {
@@ -221,4 +221,4 @@ LOGGING = {
             'propagate': False
         },
     }
-}
+}"""
