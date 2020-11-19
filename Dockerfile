@@ -11,6 +11,7 @@ RUN apk add --no-cache \
     curl \
     linux-headers \
     build-base \
+    libffi-dev \
     memcached
 
 ADD ./ /usr/src/app
