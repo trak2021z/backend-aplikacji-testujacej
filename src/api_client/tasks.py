@@ -1,7 +1,10 @@
 import json
 import os
 
-import billiard as multiprocessing
+if os.name == "nt":
+    import multiprocessing
+else:
+    import billiard as multiprocessing
 
 from .LoadTester import load_tests, abstract
 from .LoadTester.proc_func import process_function
