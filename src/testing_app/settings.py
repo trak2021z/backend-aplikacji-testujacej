@@ -165,3 +165,25 @@ if os.getenv('CELERY_BROKER_URL'):
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
 else:
     CELERY_BROKER_URL = 'amqp://localhost:5672'
+    
+LOGGING = {
+    'version': 1,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        }
+    }
+}
