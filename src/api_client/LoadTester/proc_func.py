@@ -118,8 +118,11 @@ def process_function(cls: typing.Type[abstract.LoadTesterBase], max_requests: in
     counted_requests = CountedRequestsWrapper(counter, lock, max_requests, test_call)
     obj = cls[1](counted_requests)
     try:
-        obj.set_up()
-        obj.test_func()
-    except CounterExceeded:
-        pass
-    obj.tear_down()
+        try:
+            obj.set_up()
+            obj.test_func()
+        except CounterExceeded:
+            pass
+        obj.tear_down()
+    except Exception:
+        return
