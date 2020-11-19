@@ -57,7 +57,7 @@ class Command(BaseCommand):
         TestEndpoint.objects.create(test=test_2, endpoint=offers, order=testEnd2_4.endpoint.pk)
 
         test_3 = Test.objects.create(name= "Kupuj do oporu i wystawiaj oferty sprzedaży", 
-                                    description="Kupno do oporu, wystawiaj oferty sprzedaży do końca akcji", class_name="Test3")
+                                    description="Kupno do oporu, wystawiaj oferty sprzedaży do końca akcji", class_name="BuyOffersAllAndSelloffer")
         testEnd3_1 = TestEndpoint.objects.create(test=test_3, endpoint=registration, order=0)
         testEnd3_2 = TestEndpoint.objects.create(test=test_3, endpoint=log_in, order=testEnd3_1.endpoint.pk)
         testEnd3_3 = TestEndpoint.objects.create(test=test_3, endpoint=stocks, order=testEnd3_2.endpoint.pk)
@@ -69,7 +69,7 @@ class Command(BaseCommand):
         TestEndpoint.objects.create(test=test_3, endpoint=history, order=testEnd3_8.endpoint.pk)
 
         test_4 = Test.objects.create(name= "Kupuj i sprzedawaj", 
-                                    description="Kupno do oporu, wystawiaj oferty do połowy posiadanych akcji", class_name="Test4")
+                                    description="Kupno do oporu, wystawiaj oferty do połowy posiadanych akcji", class_name="BuyAndSell")
         testEnd4_1 = TestEndpoint.objects.create(test=test_4, endpoint=registration, order=0)
         testEnd4_2 = TestEndpoint.objects.create(test=test_4, endpoint=log_in,  order=testEnd4_1.endpoint.pk)
         testEnd4_3 = TestEndpoint.objects.create(test=test_4, endpoint=stocks, order=testEnd4_2.endpoint.pk)
@@ -82,7 +82,7 @@ class Command(BaseCommand):
         TestEndpoint.objects.create(test=test_4, endpoint=stock_sell, order=testEnd4_9.endpoint.pk)
 
         test_5 = Test.objects.create(name= "Kupuj do oporu", 
-                                    description="Kupno danej akcji do końca akcji lub funduszy", class_name="Test5")
+                                    description="Kupno danej akcji do końca akcji lub funduszy", class_name="BuyWhilePossible")
         testEnd5_1 = TestEndpoint.objects.create(test=test_5, endpoint=registration, order=0)
         testEnd5_2 = TestEndpoint.objects.create(test=test_5, endpoint=log_in, order=testEnd5_1.endpoint.pk)
         testEnd5_3 = TestEndpoint.objects.create(test=test_5, endpoint=stocks, order=testEnd5_2.endpoint.pk)
@@ -90,7 +90,7 @@ class Command(BaseCommand):
         TestEndpoint.objects.create(test=test_5, endpoint=stock_buy, order=testEnd5_4.endpoint.pk)
 
         test_6 = Test.objects.create(name= "Wyświetl wszystko", 
-                                    description="Wyświetlanie kolejno wszystkich list i historii", class_name="Test6")
+                                    description="Wyświetlanie kolejno wszystkich list i historii", class_name="DisplayAll")
         testEnd6_1 = TestEndpoint.objects.create(test=test_6, endpoint=registration, order=0)
         testEnd6_2 = TestEndpoint.objects.create(test=test_6, endpoint=log_in, order=testEnd6_1.endpoint.pk)
         testEnd6_3 = TestEndpoint.objects.create(test=test_6, endpoint=stocks, order=testEnd6_2.endpoint.pk)
