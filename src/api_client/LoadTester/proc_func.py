@@ -106,7 +106,15 @@ def process_function(cls: typing.Type[abstract.LoadTesterBase], max_requests: in
     print("DUPA BLADA")
     print(test_call_dict)
     print(test_call_dict['id'])
-    test_call = TestCall.objects.get(pk=test_call_dict['id'])
+    test_call = None
+    for i in range(500):
+        try:
+            test_call = TestCall.objects.get(pk=test_call_dict['id'])
+            break
+        except Exception as e:
+            continue
+    else:
+        return
     counted_requests = CountedRequestsWrapper(counter, lock, max_requests, test_call)
     obj = cls[1](counted_requests)
     try:
