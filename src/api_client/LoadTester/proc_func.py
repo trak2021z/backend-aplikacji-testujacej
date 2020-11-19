@@ -103,6 +103,7 @@ def process_function(cls: typing.Type[abstract.LoadTesterBase], max_requests: in
     import django
     django.setup()
     from api_client.models import TestCall
+    print(test_call_dict['id'])
     test_call = TestCall.objects.get(pk=test_call_dict['id'])
     counted_requests = CountedRequestsWrapper(counter, lock, max_requests, test_call)
     obj = cls[1](counted_requests)
