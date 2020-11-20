@@ -40,6 +40,8 @@ def run_test(test_call_str: str):
     lock = multiprocessing.Lock()
     processes = []
     for i in range(test_call.num_users):
+        from django import db
+        db.connections.close_all()
         proc = multiprocessing.Process(target=process_function, args=(needed_class, test_call.max_calls, counter, lock, test_call_dict))
         proc.start()
         processes.append(proc)
