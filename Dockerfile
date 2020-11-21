@@ -14,6 +14,7 @@ RUN apk add --no-cache \
     libffi-dev \
     memcached
 
+RUN mkdir /app
 ADD ./ /usr/src/app
 WORKDIR /usr/src/app/src
 
