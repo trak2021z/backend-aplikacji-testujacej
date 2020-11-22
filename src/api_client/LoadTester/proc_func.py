@@ -20,10 +20,10 @@ class CountedRequestsWrapper(object):
         self.test_call = test_call
 
     def increment_counter(self):
-        #with self.lock:
-        if self.counter.value >= self.max_requests:
-            raise CounterExceeded()
-        self.counter.value += 1
+        with self.lock:
+            if self.counter.value >= self.max_requests:
+                raise CounterExceeded()
+            self.counter.value += 1
 
     def get_stats_data(self, result):
         data = {}

@@ -1,6 +1,6 @@
 import json
 import os
-
+import random
 if os.name == "nt":
     import multiprocessing
 else:
@@ -49,9 +49,10 @@ def run_test(test_call_str: str):
         processes.append(proc)
 
     timestamp = time.time()
+    m_t = random.randint(180 + test_call.max_calls/1000, 240 + test_call.max_calls/1000)
     for proc in processes:
         print("WAITING FOR: ", proc)
-        proc.join(timeout=(180 - max((time.time() - timestamp), 0)))
+        proc.join(timeout=(m_t - max((time.time() - timestamp), 0)))
 
     for proc in processes:
         if proc.is_alive():
