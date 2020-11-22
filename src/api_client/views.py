@@ -121,22 +121,39 @@ class TestCallView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = TestCallInputSerializer(data=request.data, fields=('test', 'num_users', 'max_calls'))
-        if serializer.is_valid():
-            test_id = serializer.validated_data['test']
-            try:
-                test_call = TestCall.objects.create(
-                    test=test_id,
-                    num_users=serializer.validated_data["num_users"],
-                    max_calls=serializer.validated_data["max_calls"]
-                )
-                save_serializer = TestCallSerializer(test_call)
-                run_test.delay(save_serializer.data)
-                return Response(save_serializer.data, status=status.HTTP_201_CREATED)
-            except Exception as e:
-                print(traceback.format_exc())
-                return JsonResponse({'error': str(e)}, safe=False, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        test_call = TestCall.objects.last()
+        if test_call.is_finished:
+            serializer = TestCallInputSerializer(data=request.data, fields=('test', 'num_users', 'max_calls'))
+            if serializer.is_valid():
+                test_id = serializer.validated_data['test']
+                try:
+                    test_call = TestCall.objects.create(
+                        test=test_id,
+                        num_users=serializer.validated_data["num_users"],
+                        max_calls=serializer.validated_data["max_calls"]
+                    )
+                    save_serializer = TestCallSerializer(test_call)
+                    run_test.delay(save_serializer.data)
+                    return Response(save_serializer.data, status=status.HTTP_201_CREATED)
+                except Exception as e:
+                    print(traceback.format_exc())
+                    return JsonResponse({'error': str(e)}, safe=False, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'error': 'Another test is already running'}, status=status.HTTP_400_BAD_REQUEST)
+
+class ActiveTestCallView(APIView):
+    serializer_class = TestCallSerializer
+
+    @swagger_auto_schema(responses={200: serializer_class()},
+                         manual_parameters=[Parameter(name="FRONT", in_='header', type='str')])
+    def get(self, request, pk=None, format=None):
+        test_call = TestCall.objects.last()
+        if test_call.is_finished:
+            return Response({'error': 'There are no active test'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            serializer = self.serializer_class(test_call)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TestCallDetailsView(APIView):

@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    url(r'^activetest/$', v.ActiveTestCallView.as_view(), name='activeTestCall_view'),
     url(r'^test/$', v.TestView.as_view(), name='tests_view'),
     url(r'^test/(?P<pk>\d+)/$', v.TestView.as_view(), name='test_view'),
     url(r'^test/result/$', v.ResultView.as_view(), name='results_view'),
