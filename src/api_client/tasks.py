@@ -17,6 +17,8 @@ import requests
 
 from datetime import datetime
 
+import time
+
 from .serializers import TestCallSerializer
 
 
@@ -46,9 +48,14 @@ def run_test(test_call_str: str):
         proc.start()
         processes.append(proc)
 
+    timestamp = time.time()
     for proc in processes:
         print("WAITING FOR: ", proc)
-        proc.join()
+        proc.join(timeout=(180 - (time.time() - timestamp)))
+
+    for proc in processes:
+        if proc.is_alive():
+            proc.terminate()
 
     print("WAITING FISHED")
     result = requests.post("%s/rest-auth/login/" % os.getenv("BACKEND_URL"),
