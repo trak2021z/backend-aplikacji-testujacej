@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 import requests
 import decimal
+import random
 
 
 class ExampleTest(LoadTesterBase):
