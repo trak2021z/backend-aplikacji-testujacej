@@ -165,7 +165,9 @@ if os.getenv('CELERY_BROKER_URL'):
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
 else:
     CELERY_BROKER_URL = 'amqp://localhost:5672'
-    
+
+
+#Kaszanka, tadada!
 """LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
