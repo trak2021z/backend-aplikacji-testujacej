@@ -57,16 +57,19 @@ def run_test(test_call_str: str):
         if proc.is_alive():
             proc.terminate()
 
-    print("WAITING FISHED")
-    result = requests.post("%s/rest-auth/login/" % os.getenv("BACKEND_URL"),
-                           json={"username": os.getenv("BACKEND_USER"), "password": os.getenv("BACKEND_PASSWORD")})
-    print("STARTING FILE WRITTING")
-    with open('prices%s.txt' % test_call.start_date.strftime("%m-%d-%Y %H-%M-%S"), 'w') as f:
-        f.write(json.dumps(requests.get("%s/price_history/" % os.getenv("BACKEND_URL"), headers={"OBCIAZNIK": "DUPA", "Authorization": "Bearer %s" % result.json()['token']}).json()))
+    try:
+        print("WAITING FISHED")
+        result = requests.post("%s/rest-auth/login/" % os.getenv("BACKEND_URL"),
+                                json={"username": os.getenv("BACKEND_USER"), "password": os.getenv("BACKEND_PASSWORD")})
+        print("STARTING FILE WRITTING")
+        with open('prices%s.txt' % test_call.start_date.strftime("%m-%d-%Y %H-%M-%S"), 'w') as f:
+            f.write(json.dumps(requests.get("%s/price_history/" % os.getenv("BACKEND_URL"), headers={"OBCIAZNIK": "DUPA", "Authorization": "Bearer %s" % result.json()['token']}).json()))
 
-    with open('transactions%s.txt' % test_call.start_date.strftime("%m-%d-%Y %H-%M-%S"), 'w') as f:
-        f.write(json.dumps(requests.get("%s/transaction/" % os.getenv("BACKEND_URL"), headers={"OBCIAZNIK": "DUPA", "Authorization": "Bearer %s" % result.json()['token']}).json()))
-    print("FILE FINISHED")
+        with open('transactions%s.txt' % test_call.start_date.strftime("%m-%d-%Y %H-%M-%S"), 'w') as f:
+            f.write(json.dumps(requests.get("%s/transaction/" % os.getenv("BACKEND_URL"), headers={"OBCIAZNIK": "DUPA", "Authorization": "Bearer %s" % result.json()['token']}).json()))
+        print("FILE FINISHED")
+    except Exception:
+        pass
     test_call.is_finished = True
     test_call.end_date = datetime.now()
     test_call.save()
