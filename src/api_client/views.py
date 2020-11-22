@@ -174,7 +174,7 @@ class TestCallJsonView(APIView):
                 for result in results:
                     json_results.append(json.loads(result.results))
                 json_name = str(test_call.id) + test_call.start_date.strftime("D%d_%m_%YT%H_%M_%S") + ".json"
-                response = HttpResponse(json_results, content_type='application/json')
+                response = Response(json_results, content_type='application/json')
                 response['Content-Disposition'] = 'attachment; filename=%s' % json_name
                 return response
             except TestCall.DoesNotExist:
