@@ -48,7 +48,8 @@ urlpatterns = [
     url(r'^test/call/(?P<pk>\d+)/$', v.TestCallView.as_view(), name='test_view'),
     url(r'^test/call/$', v.TestCallView.as_view(), name='test_view'),
     url(r'^test/call/(?P<pk>\d+)/details/$', v.TestCallDetailsView.as_view(), name='test_view'),
-    url(r'^test/call/(?P<pk>\d+)/json/$', v.TestCallJsonView.as_view(), name='test_view'),
+    url(r'^test/call/(?P<pk>\d+)/json/$', v.TestCallJsonView.as_view(), name='test_call_json_view'),
+    url(r'^test/call/(?P<pk>\d+)/csv/$', v.TestCallCSVView.as_view(), name='test_call_csv_view'),
     url(r'^test/call/date/(?P<test_date>[\w\-]+)/$', v.TestCallByDateView.as_view(), name='test_view'),
     url(r'^test/call/date/$', v.TestCallByDateView.as_view(), name='test_view'),
 ]
