@@ -51,7 +51,7 @@ def run_test(test_call_str: str):
     timestamp = time.time()
     est = test_call.max_calls / test_call.num_users
     rand = random.randint(5, 30)
-    m_t = (rand if rand > est else est) + random.randint(0, test_call.num_users)
+    m_t = min(random.randint(300, 500), (rand if rand > est else est) + random.randint(0, test_call.num_users))
     for proc in processes:
         print("WAITING FOR: ", proc)
         proc.join(timeout=(m_t - max((time.time() - timestamp), 0)))
