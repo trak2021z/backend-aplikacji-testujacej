@@ -51,7 +51,7 @@ def run_test(test_call_str: str):
     timestamp = time.time()
     for proc in processes:
         print("WAITING FOR: ", proc)
-        proc.join(timeout=(180 - (time.time() - timestamp)))
+        proc.join(timeout=(180 - max((time.time() - timestamp), 0)))
 
     for proc in processes:
         if proc.is_alive():

@@ -1,5 +1,6 @@
 import json as js
 import typing
+import traceback
 
 from multiprocessing import Process, Value, Lock
 import requests
@@ -124,5 +125,5 @@ def process_function(cls: typing.Type[abstract.LoadTesterBase], max_requests: in
         except CounterExceeded:
             pass
         obj.tear_down()
-    except Exception:
-        return
+    except Exception as e:
+        traceback.print_exc()
