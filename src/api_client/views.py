@@ -122,7 +122,7 @@ class TestCallView(APIView):
 
     def post(self, request):
         test_call = TestCall.objects.last()
-        if test_call.is_finished:
+        if test_call is None or test_call.is_finished:
             serializer = TestCallInputSerializer(data=request.data, fields=('test', 'num_users', 'max_calls'))
             if serializer.is_valid():
                 test_id = serializer.validated_data['test']
@@ -149,7 +149,7 @@ class ActiveTestCallView(APIView):
                          manual_parameters=[Parameter(name="FRONT", in_='header', type='str')])
     def get(self, request, pk=None, format=None):
         test_call = TestCall.objects.last()
-        if test_call.is_finished:
+        if test_call is not None and test_call.is_finished:
             return Response({'error': 'There are no active test'}, status=status.HTTP_404_NOT_FOUND)
         else:
             serializer = self.serializer_class(test_call)
