@@ -184,9 +184,7 @@ class BuyAndSell(LoadTesterBase):
         token = result.json()['token']
         result = self.counted_requests.get("%s/stocks/" % os.getenv("BACKEND_URL"),
                                            headers={"Authorization": "Bearer %s" % token})
-        print(result)
-        result = self.counted_requests.get("%s/stocks/" % os.getenv("BACKEND_URL"),
-                                           headers={"Authorization": "Bearer %s" % token})
+
         while True:
             print(result)
             stocks = result.json()
