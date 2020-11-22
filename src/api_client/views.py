@@ -9,8 +9,10 @@ from rest_framework import status, serializers, viewsets
 from rest_framework.views import APIView
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponse
+import time
 from django.db.models import Count
 import json
+import csv
 from rest_framework.renderers import JSONRenderer
 from datetime import datetime
 from .serializers import *
@@ -174,7 +176,7 @@ class TestCallJsonView(APIView):
                 for result in results:
                     json_results.append(json.loads(result.results))
                 json_name = str(test_call.id) + test_call.start_date.strftime("D%d_%m_%YT%H_%M_%S") + ".json"
-                response = HttpResponse(json_results, content_type='application/json')
+                response = Response(json_results, content_type='application/json')
                 response['Content-Disposition'] = 'attachment; filename=%s' % json_name
                 return response
             except TestCall.DoesNotExist:
@@ -182,6 +184,36 @@ class TestCallJsonView(APIView):
         else:
             return Response({'error': 'No pk specified'}, status=status.HTTP_404_NOT_FOUND)
 
+
+
+class TestCallCSVView(APIView):
+    serializer_class = TestCallDetailsSerializer
+
+    @swagger_auto_schema(responses={200: serializer_class()},
+                         manual_parameters=[Parameter(name="FRONT", in_='header', type='str')])
+    def get(self, request, pk=None, format=None):
+        if pk:
+            try:
+                test_call = TestCall.objects.get(id=pk)
+                results = Result.objects.filter(test_call=test_call)
+                csv_name = str(test_call.id) + test_call.start_date.strftime("D%d_%m_%YT%H_%M_%S") + ".csv"
+                response = HttpResponse(content_type='text/csv')
+                response['Content-Disposition'] = 'attachment; filename=%s' % csv_name
+                writer = csv.writer(response)
+                writer.writerow(["timestamp", "num_sql_queries", "time_spent_on_sql_queries", "time_taken", "cpu_usage_current",
+                                 "cpu_time_spent_user", "cpu_time_spent_system", "cpu_time_spent_idle", "memory_usage", "container_id"])
+                for result in results:
+                    result_obj = json.loads(result.results)
+                    timestamp = datetime.strptime(result_obj["cpu_usage_current"]["timestamp"], "%Y-%m-%d %H:%M:%S.%f").timestamp()
+                    writer.writerow([timestamp, result_obj["num_sql_queries"], result_obj["time_spent_on_sql_queries"],
+                                    result_obj["time_taken"], result_obj["cpu_usage_current"]["usage"], result_obj["cpu_time_spent_user"],
+                                    result_obj["cpu_time_spent_system"], result_obj["cpu_time_spent_idle"], result_obj["memory_usage"],
+                                    result_obj["container_id"]])
+                return response
+            except TestCall.DoesNotExist:
+                return Response({'error': 'Test Call not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({'error': 'No pk specified'}, status=status.HTTP_404_NOT_FOUND)
 
 class TestCallByDateView(APIView):
     serializer_class = TestCallSerializer
