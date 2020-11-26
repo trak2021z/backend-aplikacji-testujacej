@@ -220,12 +220,17 @@ class TestCallCSVView(APIView):
                 writer.writerow(["timestamp", "num_sql_queries", "time_spent_on_sql_queries", "time_taken", "cpu_usage_current",
                                  "cpu_time_spent_user", "cpu_time_spent_system", "cpu_time_spent_idle", "memory_usage", "container_id"])
                 for result in results:
-                    result_obj = json.loads(result.results)
-                    timestamp = datetime.strptime(result_obj["cpu_usage_current"]["timestamp"], "%Y-%m-%d %H:%M:%S.%f").timestamp()
-                    writer.writerow([timestamp, result_obj["num_sql_queries"], result_obj["time_spent_on_sql_queries"],
-                                    result_obj["time_taken"], result_obj["cpu_usage_current"]["usage"], result_obj["cpu_time_spent_user"],
-                                    result_obj["cpu_time_spent_system"], result_obj["cpu_time_spent_idle"], result_obj["memory_usage"],
-                                    result_obj["container_id"]])
+                    r = json.loads(result.results)
+                    r.get("cpu_usage_current")
+                    cpu_current = r.get("cpu_usage_current")
+                    if cpu_current:
+                        timestamp = datetime.strptime(cpu_current.get("timestamp"), "%Y-%m-%d %H:%M:%S.%f").timestamp()
+                    else:
+                        timestamp = None
+                    writer.writerow([timestamp, r.get("num_sql_queries"), r.get("time_spent_on_sql_queries"),
+                                    r.get("time_taken"), cpu_current.get("usage") if cpu_current else None, r.get("cpu_time_spent_user"),
+                                    r.get("cpu_time_spent_system"), r.get("cpu_time_spent_idle"), r.get("memory_usage"),
+                                    r.get("container_id")])
                 return response
             except TestCall.DoesNotExist:
                 return Response({'error': 'Test Call not found'}, status=status.HTTP_404_NOT_FOUND)
