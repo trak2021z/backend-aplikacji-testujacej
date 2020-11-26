@@ -90,14 +90,6 @@ class ResultView(APIView):
             testCalls = list(TestCall.objects
                              .values('id', 'start_date', 'end_date', 'num_users', 'max_calls', 'is_finished', 'is_finished')
                              .filter(id__in=testCall_ids).order_by('-start_date'))
-            for testCall in testCalls:
-                results = list(Result.objects.values('results')
-                               .filter(test_call_id=testCall['id'])
-                               .values_list('results', flat=True))
-                json_results = []
-                for result_str in results:
-                    json_results.append(json.loads(result_str))
-                testCall['results'] = json_results
             result.append(self.testResultsSerializer(test, context={'testCalls': testCalls}).data)
         return result
 
