@@ -69,7 +69,7 @@ class ResultView(APIView):
         tests = Test.objects.get(id=pk)
         testCall_ids = list(TestCall.objects.values().filter(test_id=pk).values_list('id', flat=True))
         testCalls = list(TestCall.objects
-                         .values('id', 'start_date', 'end_date', 'num_users', 'is_finished', 'is_finished')
+                         .values('id', 'start_date', 'end_date', 'num_users', 'max_calls', 'is_finished', 'is_finished')
                          .filter(id__in=testCall_ids).order_by('-start_date'))
 
         for testCall in testCalls:
@@ -88,7 +88,7 @@ class ResultView(APIView):
         for test in tests:
             testCall_ids = list(TestCall.objects.values().filter(test_id=test['id']).values_list('id', flat=True))
             testCalls = list(TestCall.objects
-                             .values('id', 'start_date', 'end_date', 'num_users', 'is_finished', 'is_finished')
+                             .values('id', 'start_date', 'end_date', 'num_users', 'max_calls', 'is_finished', 'is_finished')
                              .filter(id__in=testCall_ids).order_by('-start_date'))
             for testCall in testCalls:
                 results = list(Result.objects.values('results')
