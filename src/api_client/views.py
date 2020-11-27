@@ -171,12 +171,12 @@ class TestCallDetailsView(APIView):
                 json_results.sort(key=lambda json_results: json_results['container_id'])
                 groups = groupby(json_results, lambda json_results: json_results['container_id'])    
                 
-                results_grouped = []
+                results_grouped = {}
                 for result, group in groups:
                     tmp = []
                     for content in group:
                         tmp.append(content)
-                    results_grouped.append({result:tmp})
+                    results_grouped[result] = tmp
                     
                 data["results"] = results_grouped
                 
