@@ -9,6 +9,7 @@ from rest_framework import status, serializers, viewsets
 from rest_framework.views import APIView
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponse
+from itertools import groupby
 import time
 from django.db.models import Count
 import json
@@ -55,7 +56,8 @@ class TestView(APIView):
 
 class ResultView(APIView):
     testResultsSerializer = TestResultsSerializer
-
+    testCallDetailsSerializer = TestCallDetailsSerializer
+    
     @swagger_auto_schema(responses={200: testResultsSerializer()},
                          manual_parameters=[Parameter(name="FRONT", in_='header', type='str')])
     def get(self, request, pk=None, format=None):
@@ -83,15 +85,17 @@ class ResultView(APIView):
         return self.testResultsSerializer(tests, context={'testCalls': testCalls})
 
     def get_many(self, request, format=None):
-        result = []
-        tests = list(Test.objects.values())
-        for test in tests:
-            testCall_ids = list(TestCall.objects.values().filter(test_id=test['id']).values_list('id', flat=True))
-            testCalls = list(TestCall.objects
-                             .values('id', 'start_date', 'end_date', 'num_users', 'max_calls', 'is_finished', 'is_finished')
-                             .filter(id__in=testCall_ids).order_by('-start_date'))
-            result.append(self.testResultsSerializer(test, context={'testCalls': testCalls}).data)
-        return result
+        test_calls = TestCall.objects.all().order_by('-start_date')
+        serializer = self.testCallDetailsSerializer(test_calls, many=True)
+        for test_call in serializer.data:
+            test_call['name'] = test_call['test']['name']
+            test_call.pop('test')
+            results = list(Result.objects.values('results').filter(test_call_id=test_call['id']).values_list('results', flat=True))
+            json_results = []
+            for result_str in results:
+                json_results.append(json.loads(result_str))
+            test_call['results'] = json_results
+        return serializer.data
 
 
 class TestCallView(APIView):
@@ -163,11 +167,31 @@ class TestCallDetailsView(APIView):
                 json_results = []
                 for result in results:
                     json_results.append(json.loads(result.results))
-                data["results"] = json_results
+                    
+                json_results.sort(key=lambda json_results: json_results['container_id'])
+                groups = groupby(json_results, lambda json_results: json_results['container_id'])    
+                
+                results_grouped = {}
+                for result, group in groups:
+                    tmp = []
+                    for content in group:
+                        tmp.append(content)
+                    results_grouped[result] = tmp
+                    
+                data["results"] = results_grouped
+                
                 return Response(data, status=status.HTTP_200_OK)
             except TestCall.DoesNotExist:
                 return Response({'error': 'Test Call not found'}, status=status.HTTP_404_NOT_FOUND)
         else:
+            result = []
+            tests = list(Test.objects.values())
+            for test in tests:
+                testCall_ids = list(TestCall.objects.values().filter(test_id=test['id']).values_list('id', flat=True))
+                testCalls = list(TestCall.objects
+                                 .values('id', 'test', 'start_date', 'end_date', 'num_users', 'max_calls', 'is_finished')
+                                 .filter(id__in=testCall_ids).order_by('-start_date'))
+                result.append(testCalls)
             return Response({'error': 'No pk specified'}, status=status.HTTP_404_NOT_FOUND)
 
 
