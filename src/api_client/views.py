@@ -168,8 +168,8 @@ class TestCallDetailsView(APIView):
                 for result in results:
                     json_results.append(json.loads(result.results))
                     
-                json_results.sort(key=lambda json_results: json_results['container_id'])
-                groups = groupby(json_results, lambda json_results: json_results['container_id'])    
+                json_results.sort(key=lambda x: x['container_id'])
+                groups = groupby(json_results, lambda x: x['container_id'])
                 
                 results_grouped = {}
                 for result, group in groups:
@@ -252,6 +252,7 @@ class TestCallCSVView(APIView):
                 return Response({'error': 'Test Call not found'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({'error': 'No pk specified'}, status=status.HTTP_404_NOT_FOUND)
+
 
 class TestCallByDateView(APIView):
     serializer_class = TestCallSerializer
