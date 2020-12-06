@@ -90,11 +90,6 @@ class ResultView(APIView):
         for test_call in serializer.data:
             test_call['name'] = test_call['test']['name']
             test_call.pop('test')
-            results = list(Result.objects.values('results').filter(test_call_id=test_call['id']).values_list('results', flat=True))
-            json_results = []
-            for result_str in results:
-                json_results.append(json.loads(result_str))
-            test_call['results'] = json_results
         return serializer.data
 
 
