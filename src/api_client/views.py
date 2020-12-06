@@ -169,7 +169,7 @@ class TestCallDetailsView(APIView):
                     res = json.loads(result.results)
                     if 'container_id' in res:
                         json_results.append(res)
-                    
+                json_results.sort(key=lambda x: x['container_id'])
                 groups = groupby(json_results, lambda x: x['container_id'])
                 
                 results_grouped = {}
