@@ -8,7 +8,7 @@ djangorestframework-jwt==1.11.0
 drf-yasg2==1.19.4
 packaging==20.4
 django-cors-headers==3.5.0
-celery==5.0.2
+celery==5.2.2
 requests==2.25.0
 psycopg2-binary==2.8.6
 billiard==3.6.3.0
